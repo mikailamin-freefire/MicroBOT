@@ -29,6 +29,8 @@ int last_button_state = HIGH;
 int last_up_button_state = HIGH;
 int last_down_button_state = HIGH;
 
+int screen_timeout = 0;
+
 Adafruit_SSD1306 display(screen_width, screen_height, &Wire, oled_reset);
 
 String sys_mode = "normal";
@@ -40,11 +42,22 @@ String main_menu[] = {
     "# BlueTooth",
     "# Scan WiFi",
     "# Deauth",
-    "# Restart"
+    "# Restart",
+    "# Sleep",
+    "# About"
 };
-int main_menu_count = 6;
+int main_menu_count = 8;
 int main_menu_selection = 0;
 int main_menu_scroll = 0;
+
+String about_menu[] = {
+    "Name: MicroBOT",
+    "Author: MIKAILAMIN",
+    "screen_timeout"
+};
+int about_menu_count = 3;
+int about_menu_selection = 0;
+int about_menu_scroll = 0;
 
 String wifi_menu[100];
 int wifi_menu_count = 0;

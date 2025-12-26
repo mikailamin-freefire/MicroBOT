@@ -4,7 +4,9 @@ void load_buttons_loop()
 {
     if (digitalRead(button_pin) == LOW && last_button_state == HIGH)
     {
-        on_main_button_pressed();
+        screen_timeout = 0;
+        if (display_status)
+            on_main_button_pressed();
     }
     else if (digitalRead(button_pin) == HIGH && last_button_state == LOW)
     {
@@ -13,7 +15,9 @@ void load_buttons_loop()
 
     if (digitalRead(up_button_pin) == LOW && last_up_button_state == HIGH)
     {
-        on_up_button_pressed();
+        screen_timeout = 0;
+        if (display_status)
+            on_up_button_pressed();
     }
     else if (digitalRead(up_button_pin) == HIGH && last_up_button_state == LOW)
     {
@@ -22,7 +26,9 @@ void load_buttons_loop()
 
     if (digitalRead(down_button_pin) == LOW && last_down_button_state == HIGH)
     {
-        on_down_button_pressed();
+        screen_timeout = 0;
+        if (display_status)
+            on_down_button_pressed();
     }
     else if (digitalRead(down_button_pin) == HIGH && last_down_button_state == LOW)
     {
@@ -47,16 +53,20 @@ void on_main_button_pressed()
     {
         if (main_menu_selection == 0)
             sys_mode = "normal";
-        if (main_menu_selection == 1)
+        else if (main_menu_selection == 1)
             sys_mode = "normal";
-        if (main_menu_selection == 2)
+        else if (main_menu_selection == 2)
             sys_mode = "normal";
-        if (main_menu_selection == 3)
+        else if (main_menu_selection == 3)
             scan_networks();
-        if (main_menu_selection == 4)
+        else if (main_menu_selection == 4)
             sys_mode = "deauth";
-        if (main_menu_selection == 5)
+        else if (main_menu_selection == 5)
             esp_restart();
+        else if (main_menu_selection == 6)
+            screen_timeout = 2020;
+        else if (main_menu_selection == 7)
+            sys_mode = "about";
     }
     else if (sys_mode == "deauth")
     {
@@ -91,6 +101,11 @@ void on_main_button_pressed()
             scan_networks();
         }
     }
+    else if (sys_mode == "about") {
+        about_menu_selection = 0;
+        about_menu_scroll = 0;
+        sys_mode = "menu";
+    }
 }
 
 void on_up_button_pressed()
@@ -124,6 +139,16 @@ void on_up_button_pressed()
         if (deauth_target < deauth_target_scroll)
             deauth_target_scroll = deauth_target;
     }
+    else if (sys_mode == "about") {
+        about_menu_selection--;
+        if (about_menu_selection < 0)
+        {
+            about_menu_selection = about_menu_count - 1;
+            about_menu_scroll = about_menu_count - 4;
+        }
+        if (about_menu_selection < about_menu_scroll)
+            about_menu_scroll = about_menu_selection;
+    }
 }
 
 void on_down_button_pressed()
@@ -156,6 +181,16 @@ void on_down_button_pressed()
         }
         if (deauth_target >= deauth_target_scroll + 4)
             deauth_target_scroll = deauth_target - 3;
+    }
+    else if (sys_mode == "about") {
+        about_menu_selection++;
+        if (about_menu_selection >= about_menu_count)
+        {
+            about_menu_selection = 0;
+            about_menu_scroll = 0;
+        }
+        if (about_menu_selection >= about_menu_scroll + 4)
+            about_menu_scroll = about_menu_selection - 3;
     }
 }
 

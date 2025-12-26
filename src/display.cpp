@@ -206,6 +206,43 @@ void show_main_menu()
     display.display();
 }
 
+void show_about_menu()
+{
+    display.clearDisplay();
+    display.setTextSize(1);
+    display.setTextWrap(false);
+    display_top_outline();
+
+    display.setTextColor(WHITE);
+    display.setCursor(get_center_x("About Me"), 4);
+    display.print("About Me");
+
+    for (int i = 0; i < 4; i++)
+    {
+        int item_index = about_menu_scroll + i;
+        if (item_index >= about_menu_count)
+            break;
+
+        int y = 16 + (i * 12);
+
+        if (item_index == about_menu_selection)
+        {
+            display.drawRect(0, y, 128, 12, WHITE);
+        }
+        display.setCursor(2, y + 2);
+        if (item_index == 2)
+        {
+            display.print("Screen Timeout: " + String(screen_timeout));
+        }
+        else
+        {
+            display.print(about_menu[item_index]);
+        }
+    }
+
+    display.display();
+}
+
 void show_deauth_selection()
 {
     display.clearDisplay();
@@ -236,7 +273,8 @@ void show_deauth_selection()
             display.print(String(item_index + 1) + ". " + wifi_menu[item_index]);
         }
     }
-    else {
+    else
+    {
         display_top_outline();
         display.setTextColor(WHITE);
         display.setTextSize(1);

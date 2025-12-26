@@ -10,6 +10,7 @@ void display_sub_screen(String title, bool center = false);
 void show_normal();
 void show_deauth();
 void show_main_menu();
+void show_about_menu();
 void show_deauth_selection();
 
 #endif

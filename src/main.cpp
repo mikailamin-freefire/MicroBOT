@@ -34,32 +34,56 @@ void setup()
 
 void loop()
 {
+    screen_timeout++;
+    if (screen_timeout >= 2000)
+    {
+        display_status = false;
+    }
+    else
+    {
+        display_status = true;
+    }
     serial_loop();
+    if (!display_status)
+    {
+        display.clearDisplay();
+        display.display();
+    }
     if (sys_mode == "unlinked")
     {
-        display_sub_screen("Press to activate!");
+        if (display_status)
+            display_sub_screen("Welcome To MicroBOT");
     }
     else if (sys_mode == "normal")
     {
-        show_normal();
+        if (display_status)
+            show_normal();
     }
     else if (sys_mode == "menu")
     {
-        show_main_menu();
+        if (display_status)
+            show_main_menu();
+    }
+    else if (sys_mode == "about") {
+        if (display_status) 
+            show_about_menu();
     }
     else if (sys_mode == "deauth")
     {
-        show_deauth();
+        if (display_status)
+            show_deauth();
     }
     else if (sys_mode == "deauth_selection")
     {
         if (deauth_target < 0)
             deauth_target = 0;
-        show_deauth_selection();
+        if (display_status)
+            show_deauth_selection();
     }
     else
     {
-        display_sub_screen("Press reset!");
+        if (display_status)
+            display_sub_screen("Press reset!");
     }
 
     load_buttons_loop();
