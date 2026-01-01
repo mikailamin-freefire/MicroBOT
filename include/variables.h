@@ -10,6 +10,7 @@
 #include <esp_wifi_types.h>
 #include <ArduinoJson.h>
 #include "time.h"
+#include <esp_sleep.h>
 
 #define screen_width 128
 #define screen_height 64

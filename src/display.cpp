@@ -6,7 +6,7 @@ int get_center_x(String text)
     uint16_t wh, hh;
     display.getTextBounds(text, 0, 0, &xh, &yh, &wh, &hh);
 
-    return (screen_width - wh) / 2;
+    return ((screen_width - wh) / 2);
 }
 
 void display_top_outline()
@@ -25,28 +25,22 @@ void display_body_outline()
     display.drawLine(0, 63, 127, 63, WHITE);
 }
 
-void display_sub_screen(String title, bool center)
+void display_sub_screen(String title, String msg, bool center)
 {
     display.clearDisplay();
     display_top_outline();
     display.setTextColor(WHITE);
     display.setTextSize(1);
-    int16_t xh, yh;
-    uint16_t wh, hh;
-    display.getTextBounds(title, 0, 0, &xh, &yh, &wh, &hh);
-    int16_t cx_header = center ? ((128 - wh) / 2) - 1 : 3;
-    display.setCursor(cx_header, 4);
+    display.setCursor(get_center_x(title), 4);
     display.println(title);
     display.setTextSize(2);
     int16_t x, y;
     uint16_t w, h;
-    const char *logo = "MicroBOT";
-    display.getTextBounds(logo, 0, 0, &x, &y, &w, &h);
-    int16_t cx = (128 - w) / 2;
-    int16_t cy = (64 - 16 - h) / 2 + 16;
-    display.setCursor(cx - 1, cy - 1);
+    display.getTextBounds(msg, 0, 0, &x, &y, &w, &h);
+    int16_t cy = (screen_height - 16 - h) / 2 + 16;
+    display.setCursor(get_center_x(msg), cy - 1);
     display_body_outline();
-    display.println(logo);
+    display.println(msg);
     display.display();
 }
 
@@ -132,7 +126,7 @@ void show_deauth()
     }
     else if (deauth_target < 0)
     {
-        mac = "Select a target (UP)";
+        mac = "Select a target " + String(up_button_pin);
     }
 
     if (wifi_scan > 0 && deauth_target >= 0 && deauth_target < wifi_scan)

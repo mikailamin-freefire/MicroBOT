@@ -44,15 +44,18 @@ void loop()
         display_status = true;
     }
     serial_loop();
-    if (!display_status)
-    {
+    if (display_status) {
+        display.ssd1306_command(SSD1306_DISPLAYON);
+    }
+    else {
         display.clearDisplay();
         display.display();
+        display.ssd1306_command(SSD1306_DISPLAYOFF);
     }
     if (sys_mode == "unlinked")
     {
         if (display_status)
-            display_sub_screen("Welcome To MicroBOT");
+            display_sub_screen("Welcome To MicroBOT", "MicroBOT",true);
     }
     else if (sys_mode == "normal")
     {
@@ -80,10 +83,14 @@ void loop()
         if (display_status)
             show_deauth_selection();
     }
+    else if (sys_mode == "sleep_con") {
+        if (display_status) 
+            display_sub_screen("Press " + String(up_button_pin) + " to confirm", "SLEEP", true);
+    }
     else
     {
         if (display_status)
-            display_sub_screen("Press reset!");
+            display_sub_screen("Somthing was wrong", "ERROR", true);
     }
 
     load_buttons_loop();

@@ -64,7 +64,9 @@ void on_main_button_pressed()
         else if (main_menu_selection == 5)
             esp_restart();
         else if (main_menu_selection == 6)
-            screen_timeout = 2020;
+        {
+            sys_mode = "sleep_con";
+        }
         else if (main_menu_selection == 7)
             sys_mode = "about";
     }
@@ -101,7 +103,8 @@ void on_main_button_pressed()
             scan_networks();
         }
     }
-    else if (sys_mode == "about") {
+    else if (sys_mode == "about")
+    {
         about_menu_selection = 0;
         about_menu_scroll = 0;
         sys_mode = "menu";
@@ -126,7 +129,7 @@ void on_up_button_pressed()
     }
     else if (sys_mode == "deauth")
     {
-        sys_mode = "deauth_selection";
+        if (!is_deauth_running) sys_mode = "deauth_selection";
     }
     else if (sys_mode == "deauth_selection")
     {
@@ -139,7 +142,8 @@ void on_up_button_pressed()
         if (deauth_target < deauth_target_scroll)
             deauth_target_scroll = deauth_target;
     }
-    else if (sys_mode == "about") {
+    else if (sys_mode == "about")
+    {
         about_menu_selection--;
         if (about_menu_selection < 0)
         {
@@ -148,6 +152,14 @@ void on_up_button_pressed()
         }
         if (about_menu_selection < about_menu_scroll)
             about_menu_scroll = about_menu_selection;
+    }
+    else if (sys_mode == "sleep_con")
+    {
+        display.clearDisplay();
+        display.display();
+        display.ssd1306_command(SSD1306_DISPLAYOFF);
+        esp_sleep_enable_ext0_wakeup(GPIO_NUM_12, 0);
+        esp_deep_sleep_start();
     }
 }
 
@@ -169,7 +181,7 @@ void on_down_button_pressed()
     }
     else if (sys_mode == "deauth")
     {
-        sys_mode = "menu";
+        if (!is_deauth_running) sys_mode = "menu";
     }
     else if (sys_mode == "deauth_selection")
     {
@@ -182,7 +194,8 @@ void on_down_button_pressed()
         if (deauth_target >= deauth_target_scroll + 4)
             deauth_target_scroll = deauth_target - 3;
     }
-    else if (sys_mode == "about") {
+    else if (sys_mode == "about")
+    {
         about_menu_selection++;
         if (about_menu_selection >= about_menu_count)
         {
@@ -191,6 +204,9 @@ void on_down_button_pressed()
         }
         if (about_menu_selection >= about_menu_scroll + 4)
             about_menu_scroll = about_menu_selection - 3;
+    }
+    else if (sys_mode == "sleep_con") {
+        sys_mode = "menu";
     }
 }
 
